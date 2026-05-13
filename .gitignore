@@ -1,0 +1,18 @@
+# Environments
+.env
+.venv/
+env/
+venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Project specifics
+logs/
+output/
+
+# MS Office temporary files
+~$*
+*.tmp

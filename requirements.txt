@@ -1,0 +1,25 @@
+# Add dependencies here
+
+# Core dependencies
+requests>=2.31.0
+tenacity>=8.2.0
+
+# Dev & Build dependencies (Enforced by AI_RULES.md)
+pytest>=7.0.0
+httpx>=0.25.0
+black>=23.0.0
+pyinstaller>=6.0.0
+Pillow>=10.0.0
+markdown>=3.3.0
+
+# Web dependencies
+fastapi>=0.100.0
+uvicorn>=0.23.0
+jinja2>=3.1.2
+python-multipart>=0.0.6
+
+# Frontend & Data processing
+streamlit>=1.30.0
+openpyxl>=3.1.2
+docxtpl>=0.16.0
+sqlalchemy>=2.0.20
