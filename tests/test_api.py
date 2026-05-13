@@ -3,6 +3,7 @@ EN: Unit tests for FastAPI endpoints using TestClient.
 VI: Kịch bản kiểm thử cho các endpoint API sử dụng TestClient.
 """
 
+import os
 import pytest
 import io
 import time
@@ -12,6 +13,18 @@ import docx
 import openpyxl
 from fastapi.testclient import TestClient
 from src.main import app
+from src.database.db import init_db, SQLALCHEMY_DATABASE_URL
+
+
+@pytest.fixture(scope="module", autouse=True)
+def setup_teardown_db():
+    # Xóa file DB cũ trước khi test để đảm bảo môi trường sạch
+    db_file = SQLALCHEMY_DATABASE_URL.split("///")[-1]
+    if os.path.exists(db_file):
+        os.remove(db_file)
+    init_db()
+    yield
+
 
 client = TestClient(app)
 

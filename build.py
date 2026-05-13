@@ -164,7 +164,7 @@ if __name__ == "__main__":
     
     # 3. Khởi chạy giao diện Streamlit
     script_path = resolve_path("frontend/app.py")
-    sys.argv = ["streamlit", "run", script_path, "--server.headless=true", "--global.developmentMode=false"]
+    sys.argv = ["streamlit", "run", script_path, "--global.developmentMode=false"]
     sys.exit(stcli.main())
 """
     with open("run_unified.py", "w", encoding="utf-8") as f:
@@ -194,6 +194,18 @@ def build_app() -> None:
         )
         sys.exit(1)
 
+    # Kiểm tra xem file exe cũ có đang chạy ngầm không để tránh lỗi WinError 5
+    old_exe = os.path.join("dist", "FlexiDoc.exe")
+    if os.path.exists(old_exe):
+        try:
+            os.remove(old_exe)
+        except PermissionError:
+            print(f"\n❌ LỖI: File '{old_exe}' đang được mở hoặc chạy ngầm!")
+            print(
+                "👉 Vui lòng tắt hoàn toàn ứng dụng (hoặc dùng Task Manager -> End Task) trước khi Build lại."
+            )
+            sys.exit(1)
+
     for old_dir in ["build", "dist"]:
         if os.path.exists(old_dir):
             shutil.rmtree(old_dir, ignore_errors=True)
@@ -203,10 +215,14 @@ def build_app() -> None:
     clean_temp_files()
     ensure_init_files()
 
+    python_exe = sys.executable
+    if os.path.exists(os.path.join(".venv", "Scripts", "python.exe")):
+        python_exe = os.path.join(".venv", "Scripts", "python.exe")
+
     if os.path.exists("auto_checks.py"):
         print("🔍 Đang chạy các kịch bản kiểm tra tự động (Auto Checks)...")
         try:
-            subprocess.run([sys.executable, "auto_checks.py"], check=True)
+            subprocess.run([python_exe, "auto_checks.py"], check=True)
         except subprocess.CalledProcessError:
             print(
                 "❌ LỖI: Auto Checks thất bại. Vui lòng sửa mã nguồn trước khi đóng gói."
@@ -231,13 +247,12 @@ def build_app() -> None:
     separator = os.pathsep
 
     pyinstaller_args = [
-        sys.executable,
+        python_exe,
         "-m",
         "PyInstaller",
         "--noconfirm",
         "--clean",
         "--onefile",
-        "--windowed",
         f"--name={app_name}",
         "--paths=.",
     ]
@@ -245,6 +260,7 @@ def build_app() -> None:
     # Thêm các cờ bắt buộc để Streamlit có thể chạy trong file thực thi
     pyinstaller_args.append("--copy-metadata=streamlit")
     pyinstaller_args.append("--hidden-import=streamlit")
+    pyinstaller_args.extend(["--collect-all", "streamlit"])
 
     if (
         not os.path.exists(icon_path_ico)
@@ -266,7 +282,7 @@ def build_app() -> None:
     elif os.path.exists(icon_path_png) and platform.system() != "Windows":
         pyinstaller_args.append(f"--icon={icon_path_png}")
 
-    for extra in ["assets", "templates", "static", "frontend"]:
+    for extra in ["assets", "templates", "static", "frontend", ".streamlit"]:
         if os.path.exists(extra):
             pyinstaller_args.append(f"--add-data={extra}{separator}{extra}")
 

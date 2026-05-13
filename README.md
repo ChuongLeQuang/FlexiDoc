@@ -56,7 +56,6 @@ Nếu bạn đã khởi tạo kèm `.venv`, hãy kích hoạt nó bằng lệnh 
     ┣ 📜 PLAN.md
     ┣ 📜 requirements.txt
     ┣ 📜 .env.example
-    ┣ 📜 .env
     ┣ 📜 scan_architecture.py
     ┣ 📜 auto_checks.py
     ┣ 📜 AI_RULES.md
@@ -75,6 +74,7 @@ Nếu bạn đã khởi tạo kèm `.venv`, hãy kích hoạt nó bằng lệnh 
     ┣ 📜 run.py
     ┣ 📜 templates.py
     ┣ 📜 generate_samples.py
+    ┣ 📜 config.toml
     ┣ 📂 src
         ┣ 📜 __init__.py
         ┣ 📜 main.py
@@ -111,14 +111,18 @@ Nếu bạn đã khởi tạo kèm `.venv`, hãy kích hoạt nó bằng lệnh 
         ┣ 📂 schemas
             ┣ 📜 document.py
             ┣ 📜 profile_schema.py
+            ┣ 📜 __init__.py
         ┣ 📂 api
+            ┣ 📜 __init__.py
             ┣ 📂 v1
                 ┣ 📜 router.py
+                ┣ 📜 __init__.py
                 ┣ 📂 endpoints
                     ┣ 📜 templates.py
                     ┣ 📜 excel.py
                     ┣ 📜 profiles.py
                     ┣ 📜 documents.py
+                    ┣ 📜 __init__.py
     ┣ 📂 tests
         ┣ 📜 test_FlexiDoc.py
         ┣ 📜 __init__.py
@@ -158,6 +162,10 @@ Nếu bạn đã khởi tạo kèm `.venv`, hãy kích hoạt nó bằng lệnh 
     ┣ 📂 samples
         ┣ 📜 Du_Lieu_Nhan_Su.xlsx
         ┣ 📜 Mau_Hop_Dong.docx
+    ┣ 📂 assets
+        ┣ 📜 .gitkeep
+        ┣ 📜 icon.png
+        ┣ 📜 icon.ico
 ```
 ### 🧩 Chi Tiết Modules (Tổng quan)
 
@@ -539,6 +547,9 @@ Phần này trích xuất tự động thông tin về Đầu vào (Inputs) và 
 
 #### 📄 `tests/test_api.py`
 **Functions:**
+
+- **`def setup_teardown_db() -> Any`**
+  > Chưa có mô tả.
 
 - **`def create_dummy_docx() -> bytes`**
   > Chưa có mô tả.

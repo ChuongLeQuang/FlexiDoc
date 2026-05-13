@@ -1,0 +1,18 @@
+[theme]
+# Chọn theme cơ sở mặc định: "light" hoặc "dark"
+base="light"
+
+# Màu chủ đạo (Màu của nút bấm, thanh trạng thái, điểm nhấn) - Màu xanh Indigo
+primaryColor="#4F46E5"
+
+# Màu nền chính của trang web
+backgroundColor="#FFFFFF"
+
+# Màu nền phụ (Khung cảnh báo, các Tab, thanh Sidebar)
+secondaryBackgroundColor="#F3F4F6"
+
+# Màu chữ chính
+textColor="#1F2937"
+
+# Font chữ (sans serif, serif, monospace)
+font="sans serif"
