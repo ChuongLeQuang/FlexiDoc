@@ -227,7 +227,7 @@
 
 ### Phase 3: Hoàn thiện & Triển khai (Deployment)
 - [x] Đóng gói ứng dụng thành file thực thi (.exe)
-- [ ] Viết tài liệu (README, API Docs)
+- [x] Viết tài liệu (Cẩm nang In-app Guide, README, API Docs)
 - [ ] Triển khai lên môi trường Production
 
 ## 📝 Nhật ký (Changelog / Notes)
@@ -255,3 +255,4 @@
 - **Cập nhật Kiến trúc An toàn (2026-05-13)**: Để giải quyết bài toán "Khởi động lạnh" cho người dùng mới nhưng vẫn đảm bảo 100% an toàn cho luồng ứng dụng cốt lõi, quyết định thiết kế Module Độc Lập "Trợ lý đục lỗ" thông qua Streamlit Dialog (Popup). Bổ sung chi tiết Phase 2.5 vào WBS.
 - **Đổi hướng chiến lược (Pivot) Module Trợ lý (2026-05-13)**: Do phát hiện giới hạn rủi ro từ các biểu mẫu Word phức tạp của Việt Nam (nhiều dấu chấm, không có text neo), chuyển đổi Module "Trợ lý Đục lỗ" thành "Trợ lý Sinh Thẻ (Tag Builder)". Giao quyền kiểm soát file Word 100% lại cho người dùng thông qua thao tác Copy/Paste, ứng dụng chỉ sinh thẻ Jinja2 chuẩn và file Excel nhập liệu mẫu.
 - **Cải tiến UX Mapping (2026-05-14)**: Nâng cấp "Quy tắc đặt tên file" từ ô nhập text tự do sang dạng kết hợp (Tiền tố + Dropdown chọn biến) để tránh lỗi cú pháp Jinja2 cho người dùng và khắc phục lỗi mất state của Streamlit.
+- **Cập nhật In-app Guide (2026-05-14)**: Cập nhật Tab Hướng dẫn sử dụng để bao gồm luồng thao tác với "Trợ lý Sinh Thẻ" mới, đưa nó lên làm phương pháp khuyên dùng (Best Practice) cho người dùng mới.

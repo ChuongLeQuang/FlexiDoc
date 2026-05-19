@@ -17,6 +17,18 @@ def render_guide_tab() -> None:
         "📝 1. Cách chuẩn bị File Word (Mẫu Hợp đồng / Phụ lục)", expanded=True
     ):
         st.markdown("""
+            ### 🌟 CÁCH 1: Dùng "Trợ lý Sinh Thẻ & Tạo Excel" (Khuyên dùng)
+            Thay vì phải nhớ và gõ các cú pháp phức tạp, hệ thống đã cung cấp sẵn công cụ tự động:
+            1. Tại màn hình chính, bấm nút **✨ Mở Trợ lý**.
+            2. Khai báo tên các thông tin cần điền (Ví dụ: Họ tên nhân viên, Ngày sinh, Mức lương).
+            3. Hệ thống sẽ tự tạo các Thẻ chuẩn xác. Bạn chỉ việc đưa chuột bấm **COPY** thẻ trên Web, rồi mở file Word ra bấm **PASTE** (Dán) vào đúng chỗ cần điền. *(Việc này giúp giữ nguyên 100% định dạng in đậm, in nghiêng, căn lề trong file Word gốc của bạn).*
+            4. Bấm nút **Tải file Excel Nhập liệu** để lấy ngay file Excel có kẻ sẵn các cột khớp với file Word.
+            
+            👉 *Chỉ cần làm bước này 1 lần duy nhất, bạn đã có trong tay bộ File Mẫu chuẩn để dùng mãi mãi!*
+
+            ---
+            ### ✍️ CÁCH 2: Làm thủ công (Dành cho người dùng nâng cao)
+            Nếu bạn vẫn muốn tự gõ tay vào file Word, hãy đọc các quy tắc sau:
             ### A. Yêu cầu cơ bản (Điều kiện cần & đủ)
             - **Định dạng file:** Bắt buộc phải là file Word định dạng mới **`.docx`** (Hệ thống không hỗ trợ file `.doc` cũ hoặc `.pdf`).
             - **Nội dung:** Là một biểu mẫu, hợp đồng hoặc phụ lục chứa sẵn các văn bản cố định (quốc hiệu, tiêu ngữ, các điều khoản chung...).
@@ -57,6 +69,7 @@ def render_guide_tab() -> None:
     with st.expander("📊 2. Cách chuẩn bị File Excel (Dữ liệu)"):
         st.markdown("""
             ### A. Yêu cầu cơ bản (Điều kiện cần & đủ)
+            - 💡 **Mẹo:** Nên sử dụng nút "Tải file Excel Nhập liệu" từ **✨ Trợ lý** để có sẵn tệp Excel chuẩn xác mà không cần tự kẻ bảng từ đầu.
             - **Định dạng file:** Bắt buộc là file Excel định dạng mới **`.xlsx`**.
             - **Dòng Tiêu đề (Header):** Phải có một dòng chứa tên các cột rõ ràng (thường nằm ở dòng số 1). Hệ thống sẽ dùng dòng này để làm danh sách lựa chọn cho bạn.
             - **Nguyên tắc:** KHÔNG được gộp ô (Merge cells) ở dòng Tiêu đề. Tên các cột tuyệt đối không được trùng lặp nhau.
