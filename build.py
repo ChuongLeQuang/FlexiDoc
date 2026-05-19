@@ -44,10 +44,10 @@ VSVersionInfo(
   ffi=FixedFileInfo(filevers={vers_tuple}, prodvers={vers_tuple}, mask=0x3f, flags=0x0, OS=0x40004, fileType=0x1, subtype=0x0, date=(0, 0)),
   kids=[StringFileInfo([StringTable('040904B0', [
     StringStruct('CompanyName', 'Le Quang Chuong'),
-    StringStruct('FileDescription', 'FlexiDoc Tool'),
+    StringStruct('FileDescription', 'FlexiDoc - Công cụ tự động hóa tài liệu (Phiên bản Cá nhân)'),
     StringStruct('FileVersion', '{version}'),
     StringStruct('InternalName', 'FlexiDoc'),
-    StringStruct('LegalCopyright', 'Copyright (c) 2026 Le Quang Chuong'),
+    StringStruct('LegalCopyright', 'Copyright (c) 2026 Le Quang Chuong. All rights reserved.'),
     StringStruct('OriginalFilename', 'FlexiDoc.exe'),
     StringStruct('ProductName', 'FlexiDoc'),
     StringStruct('ProductVersion', '{version}')])]), 

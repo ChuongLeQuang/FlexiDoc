@@ -1,21 +1,21 @@
-MIT License
+GIẤY PHÉP SỬ DỤNG PHẦN MỀM ĐỘC QUYỀN (PROPRIETARY LICENSE)
 
-Copyright (c) 2026 Le Quang Chuong
+Bản quyền (c) 2026 thuộc về Lê Quang Chương (Tác giả).
+Bảo lưu mọi quyền.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+ĐIỀU KHOẢN SỬ DỤNG:
+1. Quyền Sở Hữu: Phần mềm này (FlexiDoc) là tài sản trí tuệ cá nhân, được thiết kế và lập trình độc lập bởi Tác giả. Việc cài đặt và sử dụng phần mềm này tại bất kỳ tổ chức, cơ quan, trường học nào KHÔNG đồng nghĩa với việc chuyển giao quyền sở hữu trí tuệ cho tổ chức, cơ quan, trường học đó.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+2. Cấp Phép Sử Dụng: Phần mềm này được cung cấp với tư cách là một món quà cá nhân (tặng nội bộ), cho phép người dùng cuối sử dụng miễn phí các tính năng của phần mềm để phục vụ công việc.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+3. Giới Hạn Quyền:
+   - Nghiêm cấm mọi hình thức sao chép mã nguồn, chỉnh sửa, dịch ngược (reverse engineering) hoặc bẻ khóa phần mềm.
+   - Nghiêm cấm việc thương mại hóa, bán lại hoặc phân phối phần mềm này cho bên thứ ba.
+   - Tổ chức, nhà trường nơi người dùng cuối công tác KHÔNG có quyền nhận phần mềm này làm tài sản nội bộ của cơ quan, không được phép đưa vào danh mục tài sản số của trường nếu không có sự đồng ý bằng văn bản của Tác giả.
+
+4. Thu Hồi Giấy Phép: Tác giả có toàn quyền quyết định việc thu hồi quyền sử dụng phần mềm này vào bất kỳ lúc nào nếu phát hiện các hành vi vi phạm điều khoản trên.
+
+TỪ CHỐI TRÁCH NHIỆM:
+Phần mềm được cung cấp "nguyên trạng" (AS IS), không có bất kỳ hình thức bảo hành nào. Tác giả không chịu trách nhiệm pháp lý cho bất kỳ thiệt hại nào liên quan đến dữ liệu, phần cứng hoặc kết quả công việc phát sinh từ việc sử dụng phần mềm này.
+
+Xin trân trọng cảm ơn.

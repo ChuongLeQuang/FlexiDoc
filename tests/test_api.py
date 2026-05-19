@@ -148,3 +148,59 @@ def test_generate_documents_api():
         # Do dòng dữ liệu Excel là "Nguyễn Văn A", tên file ZIP sinh ra phải chứa "HopDong"
         assert any("HopDong" in name for name in file_names)
         assert any(name.endswith(".docx") for name in file_names)
+
+
+def test_validate_template_zero_variables_api():
+    """
+    EN: Test API response when Word file has no variables (ZeroVariableError).
+    VI: Test API bẫy lỗi ZeroVariableError khi file Word không có biến.
+    """
+    doc = docx.Document()
+    doc.add_paragraph(
+        "Đây là một file Word bình thường, không chứa thẻ ngoặc nhọn nào."
+    )
+    out = io.BytesIO()
+    doc.save(out)
+
+    response = client.post(
+        "/api/v1/templates/validate",
+        files={
+            "file": (
+                "test_no_var.docx",
+                out.getvalue(),
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            )
+        },
+    )
+    # Tuỳ thuộc vào cấu hình Exception Handler ở main.py, thường lỗi nghiệp vụ sẽ là 400
+    assert response.status_code >= 400
+    assert response.json().get("error_code") == "ZERO_VARIABLES"
+
+
+def test_validate_template_invalid_format_api():
+    """Test API phản hồi lỗi khi file tải lên bị hỏng hoặc không đúng định dạng."""
+    response = client.post(
+        "/api/v1/templates/validate",
+        files={"file": ("bad_file.docx", b"Garbage data", "application/msword")},
+    )
+    assert response.status_code >= 400
+
+
+def test_validate_excel_sheet_not_found_api():
+    """Test API bẫy lỗi SheetNotFoundError khi chọn sai tên Sheet."""
+    file_bytes = create_dummy_excel()  # Hàm này tạo file có sheet tên là "Sheet1"
+
+    response = client.post(
+        "/api/v1/excel/validate",
+        data={"sheet_name": "SheetKhongTonTai", "header_row": 1},
+        files={
+            "file": (
+                "test.xlsx",
+                file_bytes,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            )
+        },
+    )
+
+    assert response.status_code >= 400
+    assert "SheetKhongTonTai" in response.json().get("message", "")

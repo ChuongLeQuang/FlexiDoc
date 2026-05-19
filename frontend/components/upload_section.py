@@ -8,6 +8,7 @@ import time
 import io
 from typing import Dict, Optional, Any
 import frontend.api_client as api_client
+from frontend.components.assistant_modal import render_assistant_modal
 
 
 def render_onboarding_ui() -> None:
@@ -18,8 +19,18 @@ def render_onboarding_ui() -> None:
     st.warning(
         "💡 **Hệ thống không tìm thấy biến dữ liệu nào trong file Word của bạn.**"
     )
+
+    if st.button(
+        "✨ Mở Trợ lý Đục lỗ",
+        type="primary",
+        use_container_width=True,
+        key="open_assistant",
+    ):
+        st.session_state.show_assistant = True
+        st.rerun()
+
     st.markdown("""
-        ### 📖 Hướng dẫn thiết lập file Word mẫu:
+        ### 📖 Hoặc làm thủ công theo các bước sau:
         1. Mở file Word của bạn lên.
         2. Thay thế những chỗ cần điền tự động bằng cặp dấu ngoặc nhọn. 
            *Ví dụ: Thay chữ `Nguyễn Văn A` thành `{{ ho_ten }}`.*
@@ -33,6 +44,26 @@ def handle_file_upload() -> Optional[Dict[str, Any]]:
     EN: Render file uploaders and handle validation flow.
     VI: Hiển thị khu vực tải file và xử lý luồng kiểm tra lỗi.
     """
+    # Gọi hiển thị popup nếu cờ đang được bật
+    if st.session_state.get("show_assistant"):
+        render_assistant_modal()
+
+    # Hiển thị nút gọi Trợ lý trực tiếp ở màn hình chính
+    col_info, col_btn = st.columns([3, 1])
+    with col_info:
+        st.info(
+            "💡 **Lần đầu sử dụng?** Nếu file Word của bạn là file tĩnh (chưa đục lỗ) và chưa có file Excel, hãy mở Trợ lý."
+        )
+    with col_btn:
+        if st.button(
+            "✨ Mở Trợ lý",
+            type="primary",
+            use_container_width=True,
+            key="open_assistant_main",
+        ):
+            st.session_state.show_assistant = True
+            st.rerun()
+
     st.write(
         "Vui lòng tải lên **cả file Mẫu Word và file Dữ liệu Excel** để hệ thống có thể đọc trên bộ nhớ đệm (Zero-Disk)."
     )

@@ -42,6 +42,16 @@ def render_guide_tab() -> None:
             | `{{ table_start:ds_thiet_bi }}` | | |
             | `{{ item.stt }}` | `{{ item.ten_thiet_bi }}` | `{{ item.so_luong }}` |
             | `{{ table_end }}` | | |
+            
+            ### D. Chèn Danh sách dạng dòng (Không dùng bảng)
+            Nếu biểu mẫu của bạn bắt buộc phải liệt kê từng dòng (không được phép kẻ bảng), hãy dùng cú pháp `list_start`:
+            1. Ghi **`{{ list_start:ten_danh_sach }}`** ở dòng bắt đầu.
+            2. Ghi **`{{ list_end }}`** ở dòng kết thúc.
+            
+            *Ví dụ minh họa:*
+            > `{{ list_start:danh_sach_lop }}`
+            > Lớp: **`{{ item.ten_lop }}`**
+            > `{{ list_end }}`
             """)
 
     with st.expander("📊 2. Cách chuẩn bị File Excel (Dữ liệu)"):
@@ -78,10 +88,10 @@ def render_guide_tab() -> None:
                - Trong file Word, bạn có thể tạo 2 biến (VD: `{{ muc_luong }}` và `{{ muc_luong_chu }}`).
                - Trên Web, bạn được phép chọn **cùng 1 cột Excel** (VD: Cột `Mức lương`) cho cả 2 biến này.
                - Ở phần **Định dạng**: Chọn `currency` cho `muc_luong` (tạo ra `15.000.000`) và `number_to_words` cho `muc_luong_chu` (tạo ra `Mười lăm triệu`).
-            5. **Khóa gom nhóm**: **RẤT QUAN TRỌNG** nếu bạn dùng bảng. Chọn "Khóa gom nhóm" là cột (VD: **`Mã NV`**) để hệ thống biết 2 dòng của `Nguyễn Văn A` thuộc về cùng 1 hợp đồng, thay vì in ra 2 hợp đồng tách biệt.
-               - *Ví dụ:* Nhân viên A có 2 dòng dữ liệu (2 thiết bị). Nếu chọn khóa là `Mã NV`, hệ thống sẽ gộp 2 dòng đó vào chung 1 bảng của 1 tờ Hợp đồng cho anh A. Nếu bỏ trống, hệ thống sẽ nhồi thiết bị của cả công ty vào chung 1 tờ Hợp đồng!
-            6. **Lọc dữ liệu (Tùy chọn in 1 người)**: Trước khi bấm tạo tài liệu, bạn có thể sử dụng bộ lọc ở Bước 3. Tính năng này cho phép bạn chọn in hợp đồng cho một hoặc vài nhân sự cụ thể thay vì in toàn bộ file Excel.
-            7. **Sinh file**: Tùy chỉnh tên file Word và bấm nút Tải file ZIP về!
+            5. **Khóa gom nhóm (Dành cho bảng biểu)**: **Cực kỳ quan trọng**. Mặc định, mỗi 1 dòng Excel sẽ đẻ ra 1 file Word. Khóa gom nhóm giúp bạn báo cho máy tính biết: *"Hãy gom nhiều dòng có chung Mã NV vào cùng 1 tờ Hợp đồng"*.
+               - *Ví dụ:* Nhân viên A có 3 dòng dữ liệu (mượn 3 thiết bị). Nếu chọn khóa là `Mã NV`, hệ thống gộp 3 dòng đó vào chung 1 bảng trong 1 tờ Hợp đồng. Nếu bỏ trống, hệ thống in ra 3 tờ Hợp đồng rời rạc cho anh A.
+            6. **Lọc dữ liệu**: Trước khi bấm tạo tài liệu, bạn có thể sử dụng bộ lọc ở Bước 3. Tính năng này cho phép bạn chọn in hợp đồng cho một hoặc vài nhân sự cụ thể thay vì in toàn bộ file Excel.
+            7. **Sinh tài liệu hàng loạt**: Cấu hình quy tắc đặt tên file (Ví dụ: `Hop_dong_{{ho_ten}}`) và bấm nút Sinh tài liệu. Máy tính sẽ tự động lặp qua Excel và tạo ra hàng loạt file Word bỏ vào 1 file ZIP cho bạn tải về!
             """)
 
     with st.expander("⚠️ 4. Giới hạn của ứng dụng (Những gì phần mềm KHÔNG làm được)"):

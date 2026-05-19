@@ -121,3 +121,14 @@ def generate_document(payload: Dict[str, Any]) -> bytes:
             else res.text
         )
         raise Exception(f"Lỗi từ server: {error_msg}")
+
+
+def assistant_generate_excel(variables: List[str]) -> bytes:
+    """
+    EN: Call API to generate Excel template.
+    VI: Gọi API để sinh file Excel mẫu.
+    """
+    res = requests.post(f"{BASE_URL}/assistant/generate-excel", json=variables)
+    if res.status_code == 200:
+        return res.content
+    raise Exception(f"Lỗi tạo file mẫu: {res.text}")

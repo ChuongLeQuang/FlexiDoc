@@ -4,7 +4,7 @@ VI: Khối gom nhóm router chính cho API v1.
 """
 
 from fastapi import APIRouter
-from src.api.v1.endpoints import templates, excel, profiles, documents
+from src.api.v1.endpoints import templates, excel, profiles, documents, assistant
 
 api_router = APIRouter()
 
@@ -13,3 +13,4 @@ api_router.include_router(templates.router, prefix="/templates", tags=["template
 api_router.include_router(excel.router, prefix="/excel", tags=["excel"])
 api_router.include_router(profiles.router, prefix="/profiles", tags=["profiles"])
 api_router.include_router(documents.router, prefix="/documents", tags=["documents"])
+api_router.include_router(assistant.router, prefix="/assistant", tags=["assistant"])

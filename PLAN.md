@@ -18,7 +18,7 @@
 - [x] Hỗ trợ Đa ngôn ngữ & Unicode (UTF-8): Xử lý an toàn tên file, nội dung tiếng Việt/ngoại ngữ trong Excel/Word và tránh lỗi font khi nén ZIP.
 - [x] Tách bạch API Contract: Chuẩn hóa giao thức giao tiếp và xử lý lỗi (Error Handling) giữa FastAPI và Streamlit.
 - [x] Tối ưu UX/UI cho Template Word: Bẫy lỗi cú pháp Jinja2 (Dry-run), hướng dẫn Onboarding khi file Word không chứa biến.
-- [x] Xử lý Word Nâng cao: Cung cấp cú pháp bảng biểu đơn giản (`{{table_start:list_name}}`) và tự động tiền xử lý (pre-process) thành cú pháp Jinja2 phức tạp, hỗ trợ RichText.
+- [x] Xử lý Word Nâng cao: Cung cấp cú pháp bảng biểu và danh sách (`table_start`, `list_start`) và tự động tiền xử lý (pre-process), hỗ trợ RichText.
 - [x] Tích hợp Cẩm nang sử dụng (In-App User Guide): Cung cấp Tab hướng dẫn trực quan trên UI kèm tính năng tải Bộ file mẫu chuẩn (Word + Excel) để người dùng thực hành.
 - [x] Tùy biến Tên file & Chống ghi đè: Cho phép người dùng cấu hình quy tắc đặt tên file Word đầu ra (dựa trên biến dữ liệu) và tự động xử lý trùng lặp (Name Collisions) khi nén ZIP.
 
@@ -32,7 +32,7 @@
 | 5 | Xử lý Excel dị thường (header, unmerge, dòng rỗng) | **2.5** (normalize_headers, extract_raw), **2.9** (Tests) | ✅ Khớp |
 | 6 | Chuẩn hóa giao thức giao tiếp & xử lý lỗi (API Contract) | **2.2** (ErrorResponse), **2.3** (Errors), **2.7** (Handler) | ✅ Khớp |
 | 7 | Bẫy lỗi Jinja2 (Dry-run), 0-variable Onboarding | **2.4** (validate_syntax), **2.7** (Bắt lỗi), **2.8** (UI) | ✅ Khớp |
-| 8 | Cú pháp bảng biểu đơn giản & Hỗ trợ RichText | **2.4** (preprocess_template), **2.6** (apply_formatting) | ✅ Khớp |
+| 8 | Cú pháp bảng biểu/danh sách & Hỗ trợ RichText | **2.4** (preprocess_template), **2.6** (apply_formatting) | ✅ Khớp |
 | 9 | Tích hợp Cẩm nang sử dụng (Hướng dẫn & File mẫu) | **2.8** (guide_tab.py) | ✅ Khớp |
 | 10| Hỗ trợ Unicode (UTF-8) & Thuật toán Số thành chữ | **2.3** (number_to_words.py), **2.6** (apply_formatting) | ✅ Khớp |
 | 11| Tùy biến Tên file đầu ra & Xử lý trùng lặp (Collision) | **2.1** (DB), **2.2** (API), **2.6** (Zip logic), **2.8** (UI) | ✅ Khớp |
@@ -142,7 +142,7 @@
 - [x] `POST /api/v1/documents/generate`: Nhận `UploadFile` (docx, xlsx) + form data `GeneratePayload`. Trả về `StreamingResponse` (MIME: `application/zip`).
 
 **2.8. Xây dựng Giao diện Web (Streamlit UI)**
-- [ ] Khởi tạo file `app.py` (ở thư mục gốc theo AI Rules) và thư mục `frontend/components/`:
+- [x] Khởi tạo file `app.py` (ở thư mục gốc theo AI Rules) và thư mục `frontend/components/`:
     - `app.py` (Main Entry): 
         - **Mục đích**: Set cấu hình trang (`st.set_page_config`), khởi tạo 2 Tabs chính ("⚡ Chạy hệ thống" và "📖 Hướng dẫn").
     - `components/guide_tab.py` -> `render_guide_tab() -> None`:
@@ -158,7 +158,7 @@
         - **Output**: Nếu thành công, hiện `st.success` và `st.download_button` trả file ZIP.
 
 **2.9. Kiểm thử & Cấu hình (Tests & CI/CD)**
-- [ ] Khởi tạo thư mục `tests/` và viết các hàm Unit Test kiểm chứng ngoại lệ:
+- [x] Khởi tạo thư mục `tests/` và viết các hàm Unit Test kiểm chứng ngoại lệ:
     - `test_word_service.py`: (Đã hoàn thành)
         - `test_preprocess_template_success()`: Input template có `{{table_start:ds}}`, output kiểm tra có tự chuyển thành `{%tr for item in ds %}`.
         - `test_validate_syntax_error()`: Input file Word cố tình viết thiếu `{%tr endfor %}`, kiểm tra assert văng `TemplateSyntaxError`.
@@ -167,11 +167,41 @@
         - `test_normalize_headers()`: Input list `[" Họ và tên  ", "Lương   mới"]`, assert output `["Họ và tên", "Lương mới"]`.
         - `test_extract_raw_data_merged()`: Tạo dữ liệu ảo có ô bị gộp (Merged Cells), assert output dict tự động điền lấp (forward-fill).
         - `test_extract_raw_data_empty_rows()`: Tạo dữ liệu ảo chứa dòng trắng tinh (chỉ có border format), assert output hàm bỏ qua 100% dòng rỗng đó.
-- [ ] Viết các Unit Test còn lại để đảm bảo độ phủ (Coverage):
+- [x] Viết các Unit Test còn lại để đảm bảo độ phủ (Coverage):
     - [x] `test_generator_service.py`: Mock test file Word output.
     - [x] `test_utils.py`: Test hàm `sanitize_filename` (đưa vào chuỗi `A/B:C*D` trả ra `A_B_C_D`) và `number_to_words`.
     - [x] `test_api.py`: Test endpoints thông qua `TestClient` của FastAPI.
 - [x] Chỉnh sửa `build.py` để khai báo các thư mục `frontend`, `templates` vào PyInstaller.
+
+### Phase 2.5: Module Độc lập - Trợ lý Sinh Thẻ & Tạo Excel (Tag Builder & Excel Generator)
+*Mục tiêu: Thay vì cố gắng thay thế văn bản rủi ro cao, cung cấp công cụ giúp người dùng tự sinh thẻ (Tags) chuẩn xác để copy/paste vào file Word, đồng thời tự động tạo file Excel khớp với các thẻ đó.*
+
+**2.5.1. Tái cấu trúc Lõi nghiệp vụ (Core Services)**
+- [x] Xóa bỏ/Giản lược `src/services/assistant_service.py` (Không cần đọc/ghi Word nữa).
+- [x] Giữ nguyên và tận dụng hàm `create_empty_template(variables: list[str]) -> bytes` trong `src/services/excel_service.py`.
+
+**2.5.2. Tái cấu trúc API (Backend Endpoints)**
+- [x] Sửa file **`src/api/v1/endpoints/assistant.py`**:
+    - Xóa endpoint `/extract-text` và `/generate-kit`.
+    - Tạo endpoint mới `POST /api/v1/assistant/generate-excel`:
+        - **Nhận (Input)**: JSON chứa mảng `variables` (Ví dụ: `["ho_ten", "item.ten_lop"]`).
+        - **Trả về (Output)**: `StreamingResponse` (File Excel `Du_Lieu_Mau.xlsx`).
+
+**2.5.3. Cập nhật Client kết nối (Frontend API Client)**
+- [ ] Sửa file **`frontend/api_client.py`**:
+    - Xóa các hàm cũ. Thêm hàm `assistant_generate_excel(variables: list[str]) -> bytes` gọi API mới.
+
+**2.5.4. Xây dựng Giao diện Trợ lý Sinh Thẻ (Streamlit UI)**
+- [ ] Sửa file **`frontend/components/assistant_modal.py`**:
+    - Khởi tạo `@st.dialog("✨ Trợ lý Sinh thẻ & Tạo Excel")`.
+    - **Giao diện nhập liệu**: Form khai báo danh sách "Biến đơn" và "Danh sách lặp" (nhập tên biến gợi nhớ).
+    - **Khu vực hiển thị Thẻ (Tags)**: Tự động format các biến thành `{{ ho_ten }}` hoặc `{{ table_start:ds }}` và hiển thị bằng `st.code()` kèm nút copy. Hướng dẫn người dùng tự mở file Word gốc và dán vào.
+    - **Nút "Tải file Excel mẫu"**: Gọi API `/generate-excel` để sinh file `.xlsx` theo cấu trúc biến vừa tạo.
+
+**2.5.5. Tái cấu trúc Kịch bản Kiểm thử (Unit Tests)**
+- [x] Sửa file **`tests/test_assistant.py`**:
+    - Giữ lại test sinh Excel.
+    - Thay thế test API ZIP bằng test API sinh `.xlsx` (`test_assistant_api_generate_excel`).
 
 ## 🗺️ Lộ trình thi công (TDD Execution Sequence)
 *Tuân thủ phương pháp Outside-In TDD (Phát triển từ ngoài vào trong) để bám sát trải nghiệm người dùng (UI-First) theo `AI_RULES.md`.*
@@ -190,8 +220,13 @@
 - [x] 3.1. Viết Test DB ➔ Code `src/database/db.py` và `src/models/` (Tham chiếu WBS 2.1).
 - [x] 3.2. Tích hợp: Nối Services và DB vào các API Endpoints và xóa Mock Data. Hoàn thiện hệ thống.
 
+**Bước 4: Module Trợ lý Sinh thẻ & Tạo Excel (Tag Builder Module - TDD)**
+- [x] 4.1. **Test Cleanup & API**: Sửa đổi `tests/test_assistant.py` (chỉ test sinh Excel), xóa các file/hàm cũ (nếu có). Cập nhật API `POST /api/v1/assistant/generate-excel`.
+- [x] 4.2. **UI Integration**: Xây dựng UI Tag Builder trong `frontend/components/assistant_modal.py`, kết nối API sinh Excel qua `api_client.py`.
+- [x] 4.3. **Manual E2E Test**: Chạy `python run.py`, mở Trợ lý, khai báo biến, copy thẻ, tải file Excel mẫu.
+
 ### Phase 3: Hoàn thiện & Triển khai (Deployment)
-- [x] Đóng gói ứng dụng / Cấu hình CI/CD (Đang tiến hành)
+- [x] Đóng gói ứng dụng thành file thực thi (.exe)
 - [ ] Viết tài liệu (README, API Docs)
 - [ ] Triển khai lên môi trường Production
 
@@ -210,9 +245,13 @@
 - **Cập nhật Logic Word Nâng cao**: Bổ sung cơ chế quét cây cú pháp Jinja2 (AST) để tách biệt Biến đơn và Biến vòng lặp bảng (`{%tr for %}`). Bổ sung giải pháp xử lý định dạng RichText và Multi-line (Alt+Enter từ Excel).
 - **Cập nhật UX (Word Template)**: Thay thế cơ chế AST phức tạp bằng cú pháp bảng biểu đơn giản hóa (`{{table_start}}`, `{{table_end}}`) và logic tiền xử lý tự động để thân thiện hơn với người dùng cuối.
 - **Cập nhật In-App Guide**: Quyết định thiết kế Tab Hướng dẫn sử dụng trực quan ngay trên Streamlit UI kèm bộ file mẫu chuẩn (Word/Excel) để giáo dục người dùng (User Education) thay vì dùng tài liệu PDF tĩnh.
+- **Cập nhật Logic Word Core**: Bổ sung cú pháp `{{ list_start:name }}` và `{{ list_end }}` để hỗ trợ lặp danh sách dạng văn bản (Paragraph loop) nhằm xử lý các biểu mẫu bắt buộc không dùng Table.
 - **Hoàn tất Phase 1**: Rà soát, hiệu chỉnh và làm rõ toàn bộ các hạng mục trong Kế hoạch Dự án. Chính thức đóng lại Giai đoạn Thiết kế.
 - **Cập nhật AI Rules**: Đưa triết lý làm việc (chi tiết hóa WBS và hoàn thiện thiết kế trước khi code) vào `AI_RULES.md` để trở thành tiêu chuẩn bắt buộc cho toàn dự án.
 - **Chi tiết hóa UI & Test WBS**: Chuẩn hóa WBS cho Phase 2.7 (Streamlit UI chia nhỏ component) và 2.8 (Unit Test định nghĩa rõ test cases) chi tiết đến từng hàm theo đúng Hiến pháp.
 - **Kiểm toán chéo (Cross-audit)**: Khớp nối yêu cầu cốt lõi với WBS, bổ sung nhóm 2.3 (Cấu hình Core) chứa Utils, Logging, Custom Exceptions và thuật toán RichText để đảm bảo tính thực thi 100% khi code.
 - **Lập Lộ trình thi công (TDD Sequence)**: Bổ sung Lộ trình thi công theo từng bước (Step-by-step), ép buộc quy trình TDD (Viết test -> Code) vào thực tiễn để tránh rủi ro code xong mới test.
 - **Hoàn tất Hiến pháp & Lộ trình**: Bổ sung quy tắc "Lập Lộ trình thi công" vào AI Rules và chốt lộ trình theo phương pháp "Outside-In TDD" để bám sát trải nghiệm người dùng.
+- **Cập nhật Kiến trúc An toàn (2026-05-13)**: Để giải quyết bài toán "Khởi động lạnh" cho người dùng mới nhưng vẫn đảm bảo 100% an toàn cho luồng ứng dụng cốt lõi, quyết định thiết kế Module Độc Lập "Trợ lý đục lỗ" thông qua Streamlit Dialog (Popup). Bổ sung chi tiết Phase 2.5 vào WBS.
+- **Đổi hướng chiến lược (Pivot) Module Trợ lý (2026-05-13)**: Do phát hiện giới hạn rủi ro từ các biểu mẫu Word phức tạp của Việt Nam (nhiều dấu chấm, không có text neo), chuyển đổi Module "Trợ lý Đục lỗ" thành "Trợ lý Sinh Thẻ (Tag Builder)". Giao quyền kiểm soát file Word 100% lại cho người dùng thông qua thao tác Copy/Paste, ứng dụng chỉ sinh thẻ Jinja2 chuẩn và file Excel nhập liệu mẫu.
+- **Cải tiến UX Mapping (2026-05-14)**: Nâng cấp "Quy tắc đặt tên file" từ ô nhập text tự do sang dạng kết hợp (Tiền tố + Dropdown chọn biến) để tránh lỗi cú pháp Jinja2 cho người dùng và khắc phục lỗi mất state của Streamlit.

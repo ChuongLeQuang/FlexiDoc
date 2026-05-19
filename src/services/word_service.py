@@ -18,8 +18,8 @@ from src.exceptions.custom_errors import (
 
 def extract_variables(template_bytes: bytes) -> Dict[str, List[str]]:
     """
-    EN: Extract all single and table variables from the Word template.
-    VI: Trích xuất tất cả các biến đơn và biến bảng biểu từ mẫu Word.
+    EN: Extract all single and table variables from the Word template, preserving their order of appearance.
+    VI: Trích xuất tất cả các biến đơn và biến bảng biểu từ mẫu Word, bảo toàn thứ tự xuất hiện của chúng.
     """
     try:
         doc = docx.Document(io.BytesIO(template_bytes))
@@ -46,11 +46,11 @@ def extract_variables(template_bytes: bytes) -> Dict[str, List[str]]:
 
     for match in matches:
         match = match.strip()
-        if match.startswith("table_start:"):
+        if match.startswith("table_start:") or match.startswith("list_start:"):
             current_table = match.split(":", 1)[1].strip()
             if current_table not in table_vars:
                 table_vars[current_table] = {}
-        elif match == "table_end":
+        elif match == "table_end" or match == "list_end":
             current_table = None
         else:
             if current_table:
@@ -71,8 +71,8 @@ def extract_variables(template_bytes: bytes) -> Dict[str, List[str]]:
 
 def preprocess_template(template_bytes: bytes) -> bytes:
     """
-    EN: Convert custom simple table syntax to Jinja2 syntax.
-    VI: Chuyển đổi cú pháp bảng biểu đơn giản thành cú pháp chuẩn của Jinja2.
+    EN: Convert custom simple table/list syntax to Jinja2 syntax. This process might remove rich text formatting from the lines containing the tags.
+    VI: Chuyển đổi cú pháp bảng biểu/danh sách đơn giản thành cú pháp của Jinja2. Quá trình này có thể làm mất định dạng rich text trên các dòng chứa thẻ.
     """
     try:
         doc = docx.Document(io.BytesIO(template_bytes))
@@ -80,15 +80,25 @@ def preprocess_template(template_bytes: bytes) -> bytes:
         def replace_in_paragraphs(paragraphs, is_table=False):
             tag = "tr" if is_table else "p"
             for p in paragraphs:
-                if "table_start" in p.text or "table_end" in p.text:
+                if any(
+                    keyword in p.text
+                    for keyword in [
+                        "table_start",
+                        "table_end",
+                        "list_start",
+                        "list_end",
+                    ]
+                ):
                     new_text = p.text
                     new_text = re.sub(
-                        r"\{\{\s*table_start\s*:\s*([^}]+?)\s*\}\}",
+                        r"\{\{\s*(?:table_start|list_start)\s*:\s*([^}]+?)\s*\}\}",
                         f"{{%{tag} for item in \\1 %}}",
                         new_text,
                     )
                     new_text = re.sub(
-                        r"\{\{\s*table_end\s*\}\}", f"{{%{tag} endfor %}}", new_text
+                        r"\{\{\s*(?:table_end|list_end)\s*\}\}",
+                        f"{{%{tag} endfor %}}",
+                        new_text,
                     )
                     p.text = new_text
 
@@ -101,8 +111,8 @@ def preprocess_template(template_bytes: bytes) -> bytes:
         out = io.BytesIO()
         doc.save(out)
         return out.getvalue()
-    except Exception:
-        raise InvalidFileFormatError("Lỗi trong quá trình tiền xử lý file Word.")
+    except Exception as e:
+        raise InvalidFileFormatError(f"Lỗi trong quá trình tiền xử lý file Word: {e}")
 
 
 def validate_syntax(template_bytes: bytes) -> None:

@@ -5,6 +5,7 @@ VI: Dịch vụ lõi để xử lý và trích xuất dữ liệu từ tệp Exc
 
 import io
 import openpyxl
+from openpyxl.styles import Font, PatternFill
 from src.exceptions.custom_errors import (
     SheetNotFoundError,
     EmptyHeaderRowError,
@@ -99,3 +100,31 @@ def extract_raw_data(
 
     wb.close()
     return data
+
+
+def create_empty_template(variables: list[str]) -> bytes:
+    """
+    EN: Create an empty Excel template with variables as headers.
+    VI: Tạo một file Excel mẫu trống với các biến làm tiêu đề.
+    """
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Data"
+
+    # Tạo tiêu đề và bôi màu xám, in đậm cho đẹp
+    header_fill = PatternFill(
+        start_color="D3D3D3", end_color="D3D3D3", fill_type="solid"
+    )
+    header_font = Font(bold=True)
+
+    for col_num, var_name in enumerate(variables, 1):
+        cell = ws.cell(row=1, column=col_num, value=var_name)
+        cell.font = header_font
+        cell.fill = header_fill
+
+        # Tạo 1 dòng dữ liệu ví dụ ở ngay bên dưới
+        ws.cell(row=2, column=col_num, value=f"Ví dụ: {var_name}")
+
+    out = io.BytesIO()
+    wb.save(out)
+    return out.getvalue()

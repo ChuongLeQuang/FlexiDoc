@@ -92,6 +92,7 @@ Nếu bạn đã khởi tạo kèm `.venv`, hãy kích hoạt nó bằng lệnh 
             ┣ 📜 word_service.py
             ┣ 📜 excel_service.py
             ┣ 📜 generator_service.py
+            ┣ 📜 assistant_service.py
         ┣ 📂 utils
             ┣ 📜 __init__.py
             ┣ 📜 retry_example.py
@@ -123,6 +124,7 @@ Nếu bạn đã khởi tạo kèm `.venv`, hãy kích hoạt nó bằng lệnh 
                     ┣ 📜 profiles.py
                     ┣ 📜 documents.py
                     ┣ 📜 __init__.py
+                    ┣ 📜 assistant.py
     ┣ 📂 tests
         ┣ 📜 test_FlexiDoc.py
         ┣ 📜 __init__.py
@@ -131,9 +133,14 @@ Nếu bạn đã khởi tạo kèm `.venv`, hãy kích hoạt nó bằng lệnh 
         ┣ 📜 test_excel_service.py
         ┣ 📜 test_generator_service.py
         ┣ 📜 test_api.py
+        ┣ 📜 test_assistant.py
     ┣ 📂 logs
     ┣ 📂 output
     ┣ 📂 data
+        ┣ 📜 DSSV Dang Ky.xlsx
+        ┣ 📜 Tổng hợp DSGV nháp.xlsx
+        ┣ 📜 phuluc_FINAL_cap nhat 11.05.26 - Copy.docx
+        ┣ 📜 Danh Sach GV Dung Lop.xlsx
         ┣ 📜 flexidoc.sqlite
     ┣ 📂 static
     ┣ 📂 templates
@@ -151,6 +158,7 @@ Nếu bạn đã khởi tạo kèm `.venv`, hãy kích hoạt nó bằng lệnh 
             ┣ 📜 generate_ui.py
             ┣ 📜 __init__.py
             ┣ 📜 guide_tab.py
+            ┣ 📜 assistant_modal.py
     ┣ 📂 .pytest_cache
         ┣ 📜 README.md
         ┣ 📜 .gitignore
@@ -163,9 +171,9 @@ Nếu bạn đã khởi tạo kèm `.venv`, hãy kích hoạt nó bằng lệnh 
         ┣ 📜 Du_Lieu_Nhan_Su.xlsx
         ┣ 📜 Mau_Hop_Dong.docx
     ┣ 📂 assets
-        ┣ 📜 .gitkeep
         ┣ 📜 icon.png
         ┣ 📜 icon.ico
+        ┣ 📜 2CJ1.png
 ```
 ### 🧩 Chi Tiết Modules (Tổng quan)
 
@@ -175,6 +183,7 @@ Nếu bạn đã khởi tạo kèm `.venv`, hãy kích hoạt nó bằng lệnh 
 | `build.py` | Kịch bản tự động hóa quá trình đóng gói ứng dụng bằng PyInstaller. |
 | `frontend/api_client.py` | API Client để xử lý giao tiếp giữa giao diện Streamlit và Backend FastAPI. |
 | `frontend/app.py` | Điểm vào chính cho Ứng dụng Web Streamlit. |
+| `frontend/components/assistant_modal.py` | Thành phần giao diện cho Module Trợ lý Sinh Thẻ & Tạo Excel (Popup). |
 | `frontend/components/generate_ui.py` | Thành phần giao diện kích hoạt sinh tài liệu và tải kết quả. |
 | `frontend/components/guide_tab.py` | Thành phần giao diện hiển thị Hướng dẫn sử dụng. |
 | `frontend/components/mapping_ui.py` | Thành phần giao diện để ánh xạ cột Excel với biến Word. |
@@ -183,6 +192,7 @@ Nếu bạn đã khởi tạo kèm `.venv`, hãy kích hoạt nó bằng lệnh 
 | `generate_samples.py` | Kịch bản sinh file Word và Excel mẫu để test thực tế trên giao diện. |
 | `run.py` | Kịch bản khởi chạy đồng thời FastAPI và Streamlit cho môi trường dev. |
 | `scan_architecture.py` | Script tự động quét thư mục dự án và sinh báo cáo kiến trúc. |
+| `src/api/v1/endpoints/assistant.py` | API endpoints cho Module Trợ lý Sinh Thẻ & Tạo Excel. |
 | `src/api/v1/endpoints/documents.py` | API endpoints trộn dữ liệu và sinh tài liệu. |
 | `src/api/v1/endpoints/excel.py` | API endpoints kiểm tra và xác thực dữ liệu Excel. |
 | `src/api/v1/endpoints/profiles.py` | API endpoints quản lý dữ liệu (CRUD) Mẫu cấu hình ánh xạ. |
@@ -199,6 +209,7 @@ Nếu bạn đã khởi tạo kèm `.venv`, hãy kích hoạt nó bằng lệnh 
 | `src/router.py` | Chưa có mô tả chi tiết. |
 | `src/schemas/document.py` | Pydantic schemas cho việc Validate và Sinh tài liệu. |
 | `src/schemas/profile_schema.py` | Pydantic schemas cho Mẫu cấu hình và Quy tắc ánh xạ. |
+| `src/services/assistant_service.py` | Dịch vụ lõi cho Module Trợ lý Sinh Thẻ (Đã được giản lược do chuyển sang luồng Tag Builder, hiện tại chỉ dùng excel_service). |
 | `src/services/excel_service.py` | Dịch vụ lõi để xử lý và trích xuất dữ liệu từ tệp Excel. |
 | `src/services/generator_service.py` | Dịch vụ lõi để trộn dữ liệu vào mẫu Word và nén thành file ZIP. |
 | `src/services/word_service.py` | Dịch vụ lõi để xử lý và xác thực mẫu Word. |
@@ -209,6 +220,7 @@ Nếu bạn đã khởi tạo kèm `.venv`, hãy kích hoạt nó bằng lệnh 
 | `src/utils/string_utils.py` | Các hàm tiện ích thao tác với chuỗi. |
 | `templates.py` | Chưa có mô tả chi tiết. |
 | `tests/test_api.py` | Kịch bản kiểm thử cho các endpoint API sử dụng TestClient. |
+| `tests/test_assistant.py` | Kịch bản kiểm thử cho Module Trợ lý Sinh Thẻ. |
 | `tests/test_excel_service.py` | Kịch bản kiểm thử cho Dịch vụ Excel. |
 | `tests/test_FlexiDoc.py` | Chưa có mô tả chi tiết. |
 | `tests/test_generator_service.py` | Kịch bản kiểm thử cho Dịch vụ Sinh tài liệu. |
@@ -268,6 +280,10 @@ Phần này trích xuất tự động thông tin về Đầu vào (Inputs) và 
   > EN: Call API to generate and ZIP documents.
   > VI: Gọi API để sinh và nén tài liệu.
 
+- **`def assistant_generate_excel(variables: List[str]) -> bytes`**
+  > EN: Call API to generate Excel template.
+  > VI: Gọi API để sinh file Excel mẫu.
+
 
 #### 📄 `frontend/app.py`
 **Functions:**
@@ -278,6 +294,16 @@ Phần này trích xuất tự động thông tin về Đầu vào (Inputs) và 
 - **`def main() -> None`**
   > EN: Main function to configure and render the Streamlit UI.
   > VI: Hàm chính để cấu hình và hiển thị giao diện Streamlit.
+
+
+#### 📄 `frontend/components/assistant_modal.py`
+**Functions:**
+
+- **`def create_var_name(text: str) -> str`**
+  > Loại bỏ dấu, ký tự đặc biệt và tạo tên biến dạng snake_case.
+
+- **`def render_assistant_modal() -> Any`**
+  > Chưa có mô tả.
 
 
 #### 📄 `frontend/components/generate_ui.py`
@@ -479,6 +505,10 @@ Phần này trích xuất tự động thông tin về Đầu vào (Inputs) và 
   > EN: Extract raw data, handling merged cells and skipping empty rows.
   > VI: Trích xuất dữ liệu thô, xử lý tự động điền ô gộp và bỏ qua dòng trống.
 
+- **`def create_empty_template(variables: list[str]) -> bytes`**
+  > EN: Create an empty Excel template with variables as headers.
+  > VI: Tạo một file Excel mẫu trống với các biến làm tiêu đề.
+
 
 #### 📄 `src/services/generator_service.py`
 **Functions:**
@@ -500,12 +530,12 @@ Phần này trích xuất tự động thông tin về Đầu vào (Inputs) và 
 **Functions:**
 
 - **`def extract_variables(template_bytes: bytes) -> Dict[str, List[str]]`**
-  > EN: Extract all single and table variables from the Word template.
-  > VI: Trích xuất tất cả các biến đơn và biến bảng biểu từ mẫu Word.
+  > EN: Extract all single and table variables from the Word template, preserving their order of appearance.
+  > VI: Trích xuất tất cả các biến đơn và biến bảng biểu từ mẫu Word, bảo toàn thứ tự xuất hiện của chúng.
 
 - **`def preprocess_template(template_bytes: bytes) -> bytes`**
-  > EN: Convert custom simple table syntax to Jinja2 syntax.
-  > VI: Chuyển đổi cú pháp bảng biểu đơn giản thành cú pháp chuẩn của Jinja2.
+  > EN: Convert custom simple table/list syntax to Jinja2 syntax. This process might remove rich text formatting from the lines containing the tags.
+  > VI: Chuyển đổi cú pháp bảng biểu/danh sách đơn giản thành cú pháp của Jinja2. Quá trình này có thể làm mất định dạng rich text trên các dòng chứa thẻ.
 
 - **`def validate_syntax(template_bytes: bytes) -> None`**
   > EN: Perform a dry-run to validate Jinja2 syntax in the template.
@@ -568,6 +598,26 @@ Phần này trích xuất tự động thông tin về Đầu vào (Inputs) và 
 
 - **`def test_generate_documents_api() -> Any`**
   > Kiểm thử API trộn và sinh file ZIP (Tạo hợp đồng/Phụ lục).
+
+- **`def test_validate_template_zero_variables_api() -> Any`**
+  > EN: Test API response when Word file has no variables (ZeroVariableError).
+  > VI: Test API bẫy lỗi ZeroVariableError khi file Word không có biến.
+
+- **`def test_validate_template_invalid_format_api() -> Any`**
+  > Test API phản hồi lỗi khi file tải lên bị hỏng hoặc không đúng định dạng.
+
+- **`def test_validate_excel_sheet_not_found_api() -> Any`**
+  > Test API bẫy lỗi SheetNotFoundError khi chọn sai tên Sheet.
+
+
+#### 📄 `tests/test_assistant.py`
+**Functions:**
+
+- **`def test_create_empty_template() -> Any`**
+  > Kiểm tra hàm sinh file Excel mẫu trên RAM.
+
+- **`def test_assistant_api_generate_excel() -> Any`**
+  > Kiểm tra API sinh file Excel mẫu.
 
 
 #### 📄 `tests/test_excel_service.py`
@@ -642,5 +692,25 @@ Phần này trích xuất tự động thông tin về Đầu vào (Inputs) và 
 
 - **`def test_validate_syntax_error() -> Any`**
   > Test bắt lỗi sai cú pháp thẻ Jinja2 (thiếu dấu ngoặc).
+
+- **`def test_extract_variables_order_preservation() -> Any`**
+  > EN: Test if extract_variables preserves the exact order of appearance.
+  > VI: Kiểm tra xem hàm extract_variables có bảo toàn đúng thứ tự xuất hiện không.
+
+- **`def test_extract_variables_duplicates_order() -> Any`**
+  > EN: Test if duplicates are ignored while keeping the first appearance order.
+  > VI: Kiểm tra xử lý biến trùng lặp và bảo toàn thứ tự xuất hiện lần đầu.
+
+- **`def test_invalid_file_format_error() -> Any`**
+  > EN: Test error when file format is invalid/corrupted.
+  > VI: Test lỗi khi truyền vào file Word hỏng hoặc không đúng định dạng docx.
+
+- **`def test_preprocess_template_list_success() -> Any`**
+  > EN: Test successful conversion of list tags to Jinja2 syntax in paragraphs.
+  > VI: Test tự động chuyển đổi thẻ danh sách đơn giản sang cú pháp Jinja2 trong đoạn văn.
+
+- **`def test_preprocess_template_table_success() -> Any`**
+  > EN: Test successful conversion of table tags to Jinja2 syntax in table rows.
+  > VI: Test tự động chuyển đổi thẻ bảng biểu đơn giản sang cú pháp Jinja2 trong bảng.
 
 <!-- ARCHITECTURE_END -->

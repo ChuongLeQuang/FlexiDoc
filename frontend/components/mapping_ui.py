@@ -88,13 +88,17 @@ def render_mapping_rules(upload_data: Dict[str, Any]) -> Dict[str, Any]:
     st.divider()
     st.subheader("⚙️ Cấu hình Gom nhóm & Đầu ra")
 
-    with st.expander("💡 Khóa gom nhóm là gì? (Bấm để xem ví dụ minh họa)"):
+    with st.expander("💡 Phân biệt bản chất: Sinh tài liệu vs Khóa gom nhóm"):
         st.markdown("""
-            **Khóa gom nhóm (Grouping Key)** giúp phần mềm biết cách gộp nhiều dòng dữ liệu trong Excel vào chung một file Word.
+            **1. Sinh tài liệu hàng loạt (Mặc định): Cơ chế 1-1**
+            - Nguyên tắc: **Mỗi 1 dòng** trong file Excel sẽ sinh ra **1 file Word** độc lập.
+            - *Ví dụ:* File Excel có 100 nhân viên -> Hệ thống tự động đẻ ra 100 tờ Hợp đồng riêng biệt.
             
-            *Ví dụ: Trong file Excel, nhân viên **Nguyễn Văn A** chiếm 2 dòng dữ liệu (được cấp 2 thiết bị).*
-            - ✅ **Nếu chọn Khóa gom nhóm (Ví dụ chọn cột: Mã NV):** Hệ thống sẽ gom 2 dòng đó lại và tạo ra **1 file Hợp đồng riêng** cho anh A, bên trong bảng liệt kê đủ 2 thiết bị.
-            - ❌ **Nếu KHÔNG chọn (Để trống):** Hệ thống sẽ gộp danh sách thiết bị của **tất cả mọi người trong công ty** và nhồi chung vào **1 tờ Hợp đồng duy nhất**.
+            **2. Khóa Gom nhóm (Chỉ dùng khi Word có Bảng biểu): Cơ chế Nhiều-1**
+            - Nguyên tắc: Gom **Nhiều dòng** trong Excel vào chung **1 cái bảng trong 1 file Word**.
+            - *Ví dụ:* Anh Nguyễn Văn A mượn 3 thiết bị (nên tên anh A bị lặp lại ở 3 dòng trong Excel).
+              👉 **Nếu CHỌN khóa (Ví dụ chọn cột: Mã NV):** Máy tính sẽ gom 3 dòng đó lại, nhét vào chung 1 cái Bảng trong 1 tờ Biên bản duy nhất của anh A.
+              👉 **Nếu KHÔNG chọn khóa:** Máy tính sẽ áp dụng cơ chế 1-1 ở trên (In ra 3 tờ Biên bản rời rạc cho anh A, mỗi tờ chỉ ghi 1 cái thiết bị).
             """)
 
     # Kiểm tra xem có biến bảng biểu không để ép buộc và tự động đoán khóa gom nhóm
@@ -119,11 +123,31 @@ def render_mapping_rules(upload_data: Dict[str, Any]) -> Dict[str, Any]:
             "🔑 Cột khóa gom nhóm (Tuỳ chọn):", [""] + excel_cols
         )
 
-    filename_pattern = st.text_input(
-        "Quy tắc đặt tên file Word",
-        value="PhuLuc_{{ ho_ten }}",
-        help="Ví dụ: PhuLuc_{{ho_ten}} hệ thống sẽ tạo ra file PhuLuc_NguyenVanA.docx",
-    )
+    st.divider()
+    st.subheader("📄 Quy tắc đặt tên file đầu ra")
+
+    single_vars = [v for v in word_vars if "." not in v]
+
+    f_col1, f_col2 = st.columns(2)
+    with f_col1:
+        file_prefix = st.text_input(
+            "Tiền tố tên file",
+            value="PhuLuc_",
+            help="Đoạn chữ cố định ở đầu tên file (Ví dụ: PhuLuc_).",
+            key="file_prefix_input",
+        )
+    with f_col2:
+        file_var = st.selectbox(
+            "Biến phân biệt",
+            options=["(Không dùng biến)"] + single_vars,
+            key="file_var_select",
+            help="Chọn một biến (Ví dụ: ho_ten) để tự động ghép vào tên file, giúp các file không bị trùng nhau.",
+        )
+
+    if file_var != "(Không dùng biến)":
+        filename_pattern = f"{file_prefix}{{{{ {file_var} }}}}"
+    else:
+        filename_pattern = file_prefix
 
     return {
         "rules": rules,
